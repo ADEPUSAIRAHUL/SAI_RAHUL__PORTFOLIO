@@ -1,84 +1,109 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sai Rahul // ARCHITECT</title>
+    
+    <title>SAI RAHUL ADEPU // AUTOMATION ARCHITECT</title>
+    <meta name="description" content="Official portfolio of Sai Rahul Adepu. Expertise in Python Systems, Automation Architecture, and Clean Engineering." />
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              'accent': '#3b82f6', // Matches the blue shirt tone
-              'accent-light': '#60a5fa',
-              'void': '#080808',
-              'surface': '#121212',
+              'accent': '#00ffff', 
+              'void': '#020202',
+              'surface': '#0a0a0a',
+              'neon-green': '#39ff14',
+              'neon-cyan': '#00ffff',
+              'neon-pink': '#ff00ff'
             },
             fontFamily: {
               display: ['"Orbitron"', 'sans-serif'],
               body: ['"Rajdhani"', 'sans-serif'],
-            },
-            cursor: {
-              'none': 'none',
+              mono: ['"Fira Code"', 'monospace'],
             }
           }
         }
       }
     </script>
     <style>
-      body {
-        background-color: #080808;
-        color: #e0e0e0;
+      body { 
+        background-color: #020202; 
+        color: #e0e0e0; 
         overflow-x: hidden;
-        cursor: none; /* Custom cursor implementation */
+        cursor: none;
       }
       
-      /* Smooth scrolling for the whole page */
+      /* Smooth Scrolling and Section Spacing */
       html {
         scroll-behavior: smooth;
       }
+      .snap-container {
+        width: 100%;
+        overflow-y: auto;
+      }
+      .slide {
+        min-height: 100vh;
+        width: 100%;
+        position: relative;
+        padding-top: 120px;
+        padding-bottom: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-      ::-webkit-scrollbar {
-        width: 6px;
+      /* Professional Scrollbar */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: #020202; }
+      ::-webkit-scrollbar-thumb { background: #1a1a1a; }
+
+      /* Scanline & Glitch */
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 99;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 255, 255, 0.2) 50%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0.1;
+        position: fixed;
+        bottom: 100%;
+        left: 0;
+        pointer-events: none;
+        animation: scanline 6s linear infinite;
       }
-      ::-webkit-scrollbar-track {
-        background: #080808;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #333;
-        border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #3b82f6;
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
       }
 
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
+      .text-outline {
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+        color: transparent;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react/": "https://esm.sh/react@18.2.0/",
-    "react-dom": "https://esm.sh/react-dom@18.2.0",
-    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-    "lucide-react": "https://esm.sh/lucide-react@0.292.0",
-    "framer-motion": "https://esm.sh/framer-motion@10.16.16?external=react,react-dom"
-  }
-}
-</script>
-</head>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react/": "https://esm.sh/react@18.2.0/",
+        "react-dom": "https://esm.sh/react-dom@18.2.0",
+        "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+        "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+        "lucide-react": "https://esm.sh/lucide-react@0.292.0",
+        "framer-motion": "https://esm.sh/framer-motion@10.16.16?external=react,react-dom"
+      }
+    }
+    </script>
+  </head>
   <body>
+    <div class="scanline"></div>
     <div id="root"></div>
   </body>
 </html>

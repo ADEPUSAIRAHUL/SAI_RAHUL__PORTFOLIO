@@ -1,322 +1,381 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { PROFILE_DATA } from './constants';
 import { ChatBot } from './components/ChatBot';
 import { CustomCursor } from './components/CustomCursor';
-import { Github, Linkedin, Mail, FileText, ArrowRight, ExternalLink } from 'lucide-react';
+import { 
+  Github, Linkedin, Mail, ShieldCheck,
+  Cpu, ChevronRight, Activity, Terminal, Database, Mail as MailIcon, Layers, BookOpen, ExternalLink, ArrowUpRight
+} from 'lucide-react';
+
+const Slide: React.FC<{ id: string; children: React.ReactNode; className?: string }> = ({ id, children, className }) => (
+  <section id={id} className={`slide px-6 md:px-24 py-32 ${className}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-5%" }}
+      transition={{ duration: 0.8 }}
+      className="w-full max-w-7xl mx-auto"
+    >
+      {children}
+    </motion.div>
+  </section>
+);
 
 const App: React.FC = () => {
-  // Navigation State
   const [activeSection, setActiveSection] = useState('HOME');
 
-  // Smooth scroll handler
   const scrollTo = (id: string) => {
-    setActiveSection(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Animation Variants
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(id);
     }
   };
 
+  const project1 = PROFILE_DATA.experiences[0];
+  const project2 = PROFILE_DATA.experiences[1];
+
   return (
-    <div className="min-h-screen bg-void text-gray-200 font-body selection:bg-accent selection:text-white relative overflow-hidden">
+    <div className="bg-void text-gray-200 font-body selection:bg-neon-cyan selection:text-black">
       <CustomCursor />
       
-      {/* GLOBAL BACKGROUND - TECH GRID */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Deep Space Base */}
-        <div className="absolute inset-0 bg-[#050505]" />
-        
-        {/* Cyber Grid Pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.05]" 
-          style={{
-            backgroundImage: `linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-            maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)',
-            WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
-          }}
-        />
-        
-        {/* Animated Ambient Glows */}
-        <motion.div 
-          animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
-          transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] bg-accent/10 rounded-full blur-[120px]" 
-        />
-        <motion.div 
-          animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.2, 1] }}
-          transition={{ duration: 10, repeat: Infinity, delay: 2 }}
-          className="absolute bottom-[-20%] right-[-10%] w-[800px] h-[800px] bg-purple-900/10 rounded-full blur-[120px]" 
-        />
+      {/* Fixed Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-[100] flex flex-col items-center pointer-events-none p-4 md:p-6 gap-4">
+        <div className="w-full flex justify-between items-center px-4 max-w-7xl mx-auto">
+          <div className="pointer-events-auto">
+            <div className="text-[10px] font-mono text-neon-cyan tracking-[0.4em] font-black uppercase">
+              SAI_RAHUL // SENIOR_ENGINEER // V5.6
+            </div>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-6 pointer-events-auto">
+            <a href={`https://${PROFILE_DATA.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-white transition-colors"><Linkedin size={18} /></a>
+            <a href="https://github.com/ADEPUSAIRAHUL" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-white transition-colors"><Github size={18} /></a>
+          </div>
+        </div>
 
-        {/* Scanline Texture */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_50%,rgba(0,0,0,0.2)_50%)] bg-[size:100%_4px] opacity-20 pointer-events-none mix-blend-overlay" />
-      </div>
+        <div className="pointer-events-auto inline-flex items-center gap-3 px-4 py-1.5 border border-neon-cyan/30 bg-black/60 backdrop-blur-md rounded-sm">
+          <ShieldCheck size={14} className="text-neon-cyan" />
+          <span className="text-[9px] font-mono tracking-[0.4em] text-neon-cyan uppercase font-bold italic">IDENTITY_VERIFIED // SECURE_ARCHIVE</span>
+        </div>
 
-      {/* Navigation Dock */}
-      <motion.nav 
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        className="fixed top-6 left-0 right-0 z-40 flex justify-center pointer-events-none"
-      >
-        <div className="bg-black/80 backdrop-blur-xl border border-white/20 rounded-full px-10 py-5 pointer-events-auto shadow-[0_0_30px_rgba(0,0,0,0.6)] flex items-center gap-10">
-          {['HOME', 'ABOUT', 'WORK', 'SKILLS'].map((item) => (
+        <div className="bg-black/80 border border-white/10 rounded-full px-4 md:px-8 py-2 md:py-3 backdrop-blur-2xl pointer-events-auto flex items-center gap-4 md:gap-8 shadow-2xl overflow-x-auto no-scrollbar max-w-[95%]">
+          {['HOME', 'SUMMARY', 'EXPERIENCE', 'SKILLS', 'EDUCATION', 'ARTICLES', 'CONTACT'].map((item) => (
             <button
               key={item}
               onClick={() => scrollTo(item)}
-              className={`text-sm font-display tracking-[0.2em] font-bold hover:text-accent hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.6)] transition-all duration-300 relative ${activeSection === item ? 'text-accent drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]' : 'text-gray-300'}`}
+              className={`text-[9px] font-display tracking-[0.2em] font-bold transition-all whitespace-nowrap ${activeSection === item ? 'text-neon-cyan underline underline-offset-4' : 'text-zinc-500 hover:text-white'}`}
             >
               {item}
-              {activeSection === item && (
-                <motion.div layoutId="nav-dot" className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-accent rounded-full shadow-[0_0_10px_#3b82f6]" />
-              )}
             </button>
           ))}
         </div>
-      </motion.nav>
+      </nav>
 
-      <main className="relative z-10">
-
-        {/* HERO SECTION - CINEMATIC FULL SCREEN */}
-        {/* Changed bg-void to bg-transparent to show global grid */}
-        <section id="HOME" className="h-screen w-full flex flex-col lg:flex-row relative overflow-hidden bg-transparent">
-          
-          {/* Left Side - Text Content */}
-          <div className="w-full lg:w-1/2 h-full flex flex-col justify-center px-8 lg:px-24 relative z-20 order-2 lg:order-1 bg-gradient-to-t from-black via-black/80 to-transparent lg:bg-none">
-             <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={staggerContainer}
-              className="max-w-3xl mt-12 lg:mt-0 relative"
+      <div className="snap-container">
+        
+        {/* SLIDE 1: HERO */}
+        <Slide id="HOME" className="bg-[#020202]">
+          <div className="text-center relative h-full flex flex-col items-center justify-center pt-24">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1 }}
             >
-              {/* Added a subtle backdrop behind text to ensure readability against any background */}
-              <div className="absolute inset-0 bg-black/40 blur-3xl -z-10 rounded-full opacity-60 pointer-events-none" />
-
-              <motion.div variants={fadeInUp} className="flex items-center gap-4 mb-6">
-                <div className="h-[2px] w-12 bg-accent shadow-[0_0_15px_#3b82f6]"></div>
-                <span className="font-display tracking-[0.3em] text-accent text-sm drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] font-bold">PORTFOLIO V2.0</span>
-              </motion.div>
-              
-              <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl xl:text-8xl font-black font-display leading-[0.9] mb-8 tracking-tight drop-shadow-2xl">
-                SAI RAHUL <br />
-                {/* Replaced gradient text with solid color to fix rendering artifacts (white box) */}
-                <span className="text-gray-400">ADEPU</span>
-              </motion.h1>
-
-              <motion.p variants={fadeInUp} className="text-lg md:text-xl text-gray-100 max-w-lg mb-10 leading-relaxed font-light border-l-2 border-accent pl-6 drop-shadow-md bg-black/20 p-2 rounded-r-lg backdrop-blur-sm">
-                {PROFILE_DATA.title} specializing in <span className="text-accent font-medium">CI/CD</span>, <span className="text-accent font-medium">Build Automation</span>, and Full-Stack Architecture.
-              </motion.p>
-
-              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
-                <a href="#WORK" onClick={(e) => { e.preventDefault(); scrollTo('WORK'); }} className="group px-8 py-4 bg-white text-black font-bold font-display tracking-wider hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                  VIEW PROJECTS <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </a>
-                <a href="mailto:adepusairahul260920@gmail.com" className="px-8 py-4 border border-white/20 hover:border-accent text-white font-display tracking-wider hover:bg-accent/10 transition-all duration-300 backdrop-blur-md">
-                  CONTACT ME
-                </a>
-              </motion.div>
-
-              <motion.div variants={fadeInUp} className="flex gap-6 mt-16 text-gray-400">
-                 <a href="https://github.com/ADEPUSAIRAHUL?tab=repositories" target="_blank" className="hover:text-white hover:scale-110 transition-all duration-300 drop-shadow-lg"><Github size={24} /></a>
-                 <a href="https://www.linkedin.com/in/sai-rahul123/" target="_blank" className="hover:text-white hover:scale-110 transition-all duration-300 drop-shadow-lg"><Linkedin size={24} /></a>
-                 <a href="#" className="hover:text-white hover:scale-110 transition-all duration-300 drop-shadow-lg"><FileText size={24} /></a>
-              </motion.div>
+              <h1 className="flex flex-col items-center justify-center leading-none mb-8 tracking-tighter uppercase italic relative z-10">
+                <span className="text-[12vw] md:text-[8vw] font-black font-display text-white italic drop-shadow-[0_0_20px_rgba(0,255,255,0.3)]">
+                  SAI RAHUL
+                </span>
+                <span className="text-[10vw] md:text-[6vw] font-black font-display text-outline-purple italic -mt-4 md:-mt-8">
+                  ADEPU
+                </span>
+              </h1>
             </motion.div>
+
+            <div className="space-y-4 mb-16">
+              <p className="text-lg md:text-xl text-zinc-500 font-display tracking-[0.4em] uppercase italic">
+                SENIOR SOFTWARE ENGINEER // <span className="text-white font-bold">PYTHON</span>
+              </p>
+              <p className="text-xl md:text-3xl text-white font-black font-display tracking-[0.2em] uppercase italic">
+                AUTOMATION & CI/CD ARCHITECT
+              </p>
+            </div>
+
+            {/* DASHED BOX PROJECTS */}
+            <div className="w-full max-w-5xl px-4">
+              <div className="text-left mb-4 flex justify-between items-center">
+                <span className="text-[9px] text-neon-cyan font-mono tracking-[0.4em] font-black">MISSION_PORTFOLIO // TOP_DEPLOYS</span>
+                <span className="text-[9px] text-zinc-700 font-mono tracking-widest font-bold italic uppercase">System_Active_</span>
+              </div>
+              <div className="border-2 border-dashed border-neon-cyan/40 p-1 md:p-2 bg-black/40 backdrop-blur-xl">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <button 
+                      onClick={() => scrollTo('EXPERIENCE')}
+                      className="group p-6 md:p-10 bg-void/80 hover:bg-neon-cyan/10 transition-all text-left relative overflow-hidden border border-white/5"
+                    >
+                       <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-100 transition-all text-neon-cyan"><Cpu size={60}/></div>
+                       <div className="text-[10px] text-neon-cyan font-mono mb-3 tracking-widest font-bold">PROJECT_01 // AUTOMATION</div>
+                       <h4 className="text-white font-display text-2xl font-black uppercase italic leading-tight group-hover:text-neon-cyan transition-colors">{project1.role}</h4>
+                       <p className="text-[10px] text-zinc-500 font-mono mt-6 uppercase tracking-widest italic group-hover:text-zinc-300 transition-colors">{project1.company} // {project1.effortReduction}</p>
+                    </button>
+                    <button 
+                      onClick={() => scrollTo('EXPERIENCE')}
+                      className="group p-6 md:p-10 bg-void/80 hover:bg-neon-cyan/10 transition-all text-left relative overflow-hidden border border-white/5"
+                    >
+                       <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-100 transition-all text-neon-cyan"><Activity size={60}/></div>
+                       <div className="text-[10px] text-neon-cyan font-mono mb-3 tracking-widest font-bold">PROJECT_02 // ARCHITECTURE</div>
+                       <h4 className="text-white font-display text-2xl font-black uppercase italic leading-tight group-hover:text-neon-cyan transition-colors">{project2.role}</h4>
+                       <p className="text-[10px] text-zinc-500 font-mono mt-6 uppercase tracking-widest italic group-hover:text-zinc-300 transition-colors">{project2.company} // {project2.effortReduction}</p>
+                    </button>
+                 </div>
+              </div>
+            </div>
+
+            <div className="mt-12 flex flex-col items-center gap-4 cursor-pointer opacity-40 hover:opacity-100 transition-all" onClick={() => scrollTo('SUMMARY')}>
+              <span className="text-[10px] font-mono tracking-[0.6em] uppercase text-zinc-600">BEGIN_ARCHIVE_ACCESS</span>
+              <div className="w-px h-12 bg-gradient-to-b from-neon-cyan to-transparent animate-pulse" />
+            </div>
           </div>
+        </Slide>
 
-          {/* Right Side - Full Screen Image Container */}
-          <div className="w-full lg:w-1/2 h-[50vh] lg:h-full relative order-1 lg:order-2">
-             
-             {/* The Image */}
-             <motion.img 
-               initial={{ opacity: 0, scale: 1.1, filter: 'grayscale(100%) brightness(0.8)' }}
-               animate={{ opacity: 1, scale: 1, filter: 'grayscale(0%) brightness(1)' }}
-               transition={{ duration: 1.5, ease: "easeOut" }}
-               src="/sai-rahul.png" 
-               alt="Sai Rahul Adepu" 
-               className="w-full h-full object-cover object-[50%_20%] relative z-0"
-               onError={(e) => {
-                 const target = e.target as HTMLImageElement;
-                 target.onerror = null; // Prevent infinite loop
-                 // Fallback to a cool cyber-aesthetic placeholder if local image is missing
-                 target.src = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop";
-               }}
-             />
-
-             {/* Gradient Blending Masks - Adjusted for Global Background */}
-             <div className="absolute inset-y-0 left-0 w-32 lg:w-80 bg-gradient-to-r from-black via-black/80 to-transparent z-10"></div>
-             <div className="absolute bottom-0 left-0 right-0 h-40 lg:h-80 bg-gradient-to-t from-black via-black/80 to-transparent z-10"></div>
-             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/80 to-transparent z-10"></div>
-             <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-black/50 to-transparent z-10"></div>
-
-             {/* Floating Stats Badge */}
-             <motion.div 
-               initial={{ x: 50, opacity: 0 }}
-               animate={{ x: 0, opacity: 1 }}
-               transition={{ delay: 1.2, duration: 0.8 }}
-               className="absolute bottom-12 right-6 lg:bottom-16 lg:right-16 z-20 bg-black/40 backdrop-blur-xl border border-white/10 p-6 max-w-[200px] overflow-hidden group hover:border-accent/50 transition-colors"
-             >
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent opacity-50"></div>
-                <div className="text-4xl font-display font-bold text-white mb-1 group-hover:text-accent transition-colors">60%</div>
-                <div className="text-xs text-gray-300 uppercase tracking-widest leading-tight">Reduction in DevOps Effort</div>
-             </motion.div>
-          </div>
-
-        </section>
-
-
-        {/* ABOUT SECTION */}
-        <section id="ABOUT" className="py-32 px-6 relative z-10">
-          {/* Glass Card for Content */}
-          <div className="max-w-6xl mx-auto bg-black/40 backdrop-blur-md border border-white/5 p-8 md:p-12 rounded-3xl">
-            <motion.div 
-               initial="hidden"
-               whileInView="visible"
-               viewport={{ once: true, margin: "-100px" }}
-               variants={staggerContainer}
-               className="grid grid-cols-1 md:grid-cols-12 gap-12"
-            >
-               <div className="md:col-span-4">
-                 <motion.h2 variants={fadeInUp} className="text-5xl font-display font-bold text-white mb-8">
-                   ABOUT <br /><span className="text-accent">THE DEV</span>
-                 </motion.h2>
-               </div>
-               <div className="md:col-span-8">
-                 <motion.p variants={fadeInUp} className="text-2xl text-gray-300 leading-relaxed mb-8">
-                   {PROFILE_DATA.about}
-                 </motion.p>
-                 <motion.div variants={fadeInUp} className="grid grid-cols-2 gap-8 border-t border-white/10 pt-8">
-                    <div>
-                      <h4 className="font-display text-gray-500 mb-2 tracking-wider">EDUCATION</h4>
-                      {PROFILE_DATA.education.map((edu) => (
-                        <div key={edu.id} className="mb-4">
-                          <div className="text-white font-bold">{edu.degree}</div>
-                          <div className="text-sm text-gray-400">{edu.school}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <div>
-                      <h4 className="font-display text-gray-500 mb-2 tracking-wider">LOCATION</h4>
-                      <div className="text-white">{PROFILE_DATA.location}</div>
-                      <div className="mt-4 text-accent">{PROFILE_DATA.education[0].year}</div>
-                    </div>
-                 </motion.div>
-               </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* WORK EXPERIENCE */}
-        <section id="WORK" className="py-32 px-6 relative z-10">
-           <div className="max-w-6xl mx-auto">
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="mb-20"
-             >
-                <h2 className="text-sm font-display tracking-[0.3em] text-accent mb-4">CAREER TIMELINE</h2>
-                <h3 className="text-5xl font-display font-bold text-white">SELECTED EXPERIENCE</h3>
-             </motion.div>
-
-             <div className="space-y-24">
-               {PROFILE_DATA.experiences.map((exp, index) => (
+        {/* SLIDE 2: SUMMARY */}
+        <Slide id="SUMMARY" className="bg-black">
+          <div className="max-w-6xl mx-auto w-full">
+             <div className="mb-20">
+               <h2 className="text-[10px] font-display tracking-[0.6em] text-neon-cyan uppercase mb-6">00 // PROFESSIONAL_SUMMARY</h2>
+               <h3 className="text-5xl md:text-8xl font-display font-black text-white uppercase italic tracking-tighter">OPERATIONAL <span className="text-zinc-800">IDENTITY</span></h3>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-16">
+               {PROFILE_DATA.summaryPoints.map((point, idx) => (
                  <motion.div 
-                   key={exp.id}
-                   initial={{ opacity: 0, y: 50 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true, margin: "-50px" }}
-                   transition={{ duration: 0.6 }}
-                   className="group grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 border-t border-white/10 pt-16 hover:border-white/30 transition-colors duration-500"
+                   key={idx}
+                   initial={{ opacity: 0, x: -10 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true }}
+                   className="flex gap-8 group"
                  >
-                    <div className="md:col-span-3">
-                       <span className="font-display text-4xl text-white/20 group-hover:text-accent transition-colors duration-500">0{index + 1}</span>
-                       <div className="mt-4 font-body text-lg text-gray-400">{exp.period}</div>
+                   <span className="text-neon-cyan font-mono text-xs pt-1 opacity-50 font-black">0{idx+1}_</span>
+                   <p className="text-zinc-400 font-body text-xl md:text-2xl leading-relaxed border-l border-zinc-900 pl-10 group-hover:border-neon-cyan group-hover:text-zinc-100 transition-all italic">
+                     {point}
+                   </p>
+                 </motion.div>
+               ))}
+             </div>
+          </div>
+        </Slide>
+
+        {/* SLIDE 3: EXPERIENCE */}
+        <Slide id="EXPERIENCE" className="bg-void">
+          <div className="max-w-7xl mx-auto w-full">
+            <div className="mb-32 flex justify-between items-end border-b border-white/10 pb-12">
+               <div>
+                  <h2 className="text-[10px] font-display tracking-[0.6em] text-neon-cyan uppercase mb-6">01 // PROJECT_MISSION_LOGS</h2>
+                  <h3 className="text-6xl md:text-9xl font-display font-black text-white uppercase tracking-tighter italic leading-none">THE <span className="text-zinc-800">ARCHIVE</span></h3>
+               </div>
+            </div>
+            
+            <div className="space-y-64">
+              {PROFILE_DATA.experiences.map((exp, idx) => (
+                <div 
+                  key={exp.id} 
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-20 relative min-h-[40vh]"
+                >
+                  <div className="lg:col-span-4">
+                     <div className="lg:sticky lg:top-48">
+                        <div className="text-[10px] text-neon-cyan font-mono mb-6 tracking-[0.4em] uppercase flex items-center gap-3">
+                          <div className="w-2 h-2 bg-neon-cyan animate-pulse rounded-full"></div> MISSION_NODE_0x{idx+1} // {exp.period}
+                        </div>
+                        <h4 className="text-4xl md:text-5xl font-display font-black text-white mb-6 uppercase italic leading-tight">
+                          {exp.role}
+                        </h4>
+                        <div className="text-zinc-500 font-mono text-xs mb-8 uppercase tracking-widest">{exp.company}</div>
+                        
+                        {exp.link && (
+                           <div className="text-[11px] text-neon-cyan font-mono mb-8 bg-neon-cyan/5 p-4 border-l-2 border-neon-cyan uppercase tracking-tighter italic">
+                             {exp.link}
+                           </div>
+                        )}
+
+                        <div className="bg-neon-cyan/5 border border-neon-cyan/20 p-8 group hover:border-neon-cyan/40 transition-colors">
+                           <div className="text-[9px] text-neon-cyan font-mono tracking-widest uppercase mb-2 font-black">Impact_Factor</div>
+                           <div className="text-4xl font-display font-black text-white italic group-hover:scale-105 transition-transform origin-left">{exp.effortReduction}</div>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="lg:col-span-8">
+                    <div className="space-y-12">
+                      <div className="flex items-center gap-4 text-zinc-700 font-mono text-[11px] uppercase tracking-widest mb-6 border-b border-white/5 pb-4">
+                        <Terminal size={16} className="text-neon-cyan" /> PROTOCOL_LOGS
+                      </div>
+                      <div className="space-y-12">
+                        {exp.description.map((step, sIdx) => (
+                          <div key={sIdx} className="flex gap-10 group/item">
+                            <span className="text-neon-cyan font-mono text-xs pt-1.5 opacity-30 group-hover/item:opacity-100 transition-all font-black tracking-tighter">L_{sIdx+1}</span>
+                            <div className="flex-1">
+                              <p className="text-zinc-400 font-body text-xl md:text-2xl leading-relaxed border-l border-zinc-900 pl-10 group-hover/item:border-neon-cyan group-hover/item:text-zinc-100 transition-all italic">
+                                {step}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Slide>
+
+        {/* SLIDE 4: SKILLS */}
+        <Slide id="SKILLS" className="bg-black">
+          <div className="max-w-7xl mx-auto w-full">
+            <div className="mb-32 text-center">
+              <h2 className="text-[11px] font-display tracking-[0.6em] text-neon-green uppercase mb-8">02 // CAPABILITIES_MATRIX</h2>
+              <h3 className="text-7xl md:text-9xl font-display font-black text-white uppercase tracking-tighter italic">TECH <span className="text-zinc-800">STACK</span></h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {PROFILE_DATA.skills.map((group, idx) => (
+                <div key={idx} className="p-12 border border-white/5 bg-surface/30 group relative overflow-hidden">
+                  <div className="absolute top-6 right-10 text-neon-green/5 font-display font-black text-[100px] select-none pointer-events-none group-hover:scale-110 transition-transform">0{idx+1}</div>
+                  <h4 className="text-white font-display text-xs mb-12 uppercase tracking-[0.4em] font-black text-neon-green border-l-4 border-neon-green pl-10">{group.category}</h4>
+                  <div className="flex flex-col gap-6">
+                    {group.items.map(skill => (
+                      <div key={skill} className="flex items-center gap-4 group/item">
+                        <ChevronRight size={14} className="text-neon-green/30 group-hover/item:text-neon-green group-hover/item:translate-x-1 transition-all" />
+                        <span className="text-[14px] font-mono text-zinc-400 group-hover/item:text-white transition-all uppercase tracking-widest">{skill}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Slide>
+
+        {/* SLIDE 5: EDUCATION */}
+        <Slide id="EDUCATION" className="bg-void">
+          <div className="max-w-5xl mx-auto w-full">
+             <h2 className="text-[11px] font-display tracking-[0.6em] text-neon-pink uppercase mb-10 border-l-4 border-neon-pink pl-10">03 // EDUCATION_ARCHIVE</h2>
+             <h3 className="text-6xl md:text-8xl font-display font-black text-white leading-tight uppercase mb-24 italic tracking-tighter">ACADEMIC <span className="text-zinc-800">ROOTS</span></h3>
+             <div className="space-y-16">
+                {PROFILE_DATA.education.map((edu) => (
+                   <div 
+                     key={edu.id}
+                     className="relative p-12 border border-white/5 bg-surface/20 group hover:border-neon-pink/20 transition-all"
+                   >
+                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-all text-neon-pink">
+                        <Database size={100} />
+                      </div>
+                      <div className="text-[12px] text-neon-pink font-mono tracking-[0.4em] uppercase mb-4 font-black">{edu.year}</div>
+                      <h4 className="text-4xl font-display font-black text-white uppercase mb-4 italic group-hover:text-neon-pink transition-colors">{edu.degree}</h4>
+                      <p className="text-xl text-zinc-500 font-body uppercase tracking-widest italic">{edu.school}</p>
+                   </div>
+                ))}
+             </div>
+          </div>
+        </Slide>
+
+        {/* SLIDE 6: ARTICLES */}
+        <Slide id="ARTICLES" className="bg-black">
+           <div className="max-w-7xl mx-auto w-full">
+              <div className="mb-24">
+                 <h2 className="text-[11px] font-display tracking-[0.6em] text-neon-cyan uppercase mb-8 border-l-4 border-neon-cyan pl-10">04 // INTEL_ARCHIVE</h2>
+                 <h3 className="text-6xl md:text-8xl font-display font-black text-white leading-tight uppercase mb-4 italic tracking-tighter">THOUGHT <span className="text-zinc-800">LEADERSHIP</span></h3>
+                 <p className="text-zinc-500 font-mono text-[10px] tracking-widest uppercase">Research_Papers // Technical_Articles // Future_Roadmaps</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {PROFILE_DATA.articles.map((article) => (
+                  <a 
+                    key={article.id} 
+                    href={article.externalUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group border border-white/5 bg-surface/20 p-10 flex flex-col justify-between hover:bg-neon-cyan/5 hover:border-neon-cyan/20 transition-all relative overflow-hidden"
+                  >
+                    <div className="absolute -right-8 -bottom-8 p-12 opacity-5 group-hover:opacity-10 transition-all text-neon-cyan">
+                      <BookOpen size={140} />
                     </div>
                     
-                    <div className="md:col-span-9">
-                       <h4 className="text-3xl font-bold font-display text-white mb-2">{exp.role}</h4>
-                       <div className="text-xl text-accent mb-6">{exp.company}</div>
-                       <ul className="space-y-4 mb-8">
-                         {exp.description.map((desc, i) => (
-                           <li key={i} className="text-lg text-gray-400 leading-relaxed pl-6 relative before:content-[''] before:absolute before:left-0 before:top-3 before:w-2 before:h-[1px] before:bg-accent">
-                             {desc}
-                           </li>
-                         ))}
-                       </ul>
-                       <div className="flex gap-4">
-                         {['Python', 'CI/CD', 'Automation'].map((tag, t) => (
-                           <span key={t} className="px-3 py-1 rounded-full border border-white/10 text-xs text-gray-500 uppercase tracking-wider group-hover:border-accent/50 group-hover:text-accent transition-colors">
-                             {tag}
-                           </span>
-                         ))}
-                       </div>
+                    <div>
+                      <div className="flex justify-between items-start mb-12">
+                         <span className="text-[9px] font-mono text-neon-cyan tracking-[0.3em] font-black uppercase border border-neon-cyan/20 px-3 py-1 bg-neon-cyan/5">{article.category}</span>
+                         <ArrowUpRight className="text-zinc-800 group-hover:text-neon-cyan transition-colors" />
+                      </div>
+                      <h4 className="text-2xl font-display font-black text-white uppercase italic mb-6 group-hover:text-neon-cyan transition-colors leading-tight">{article.title}</h4>
+                      <p className="text-zinc-500 font-body text-lg italic leading-relaxed mb-10 group-hover:text-zinc-300 transition-colors">{article.summary}</p>
                     </div>
-                 </motion.div>
-               ))}
-             </div>
-           </div>
-        </section>
 
-        {/* SKILLS MARQUEE */}
-        <section id="SKILLS" className="py-32 bg-black/20 backdrop-blur-sm border-y border-white/5 overflow-hidden relative z-10">
-           <div className="mb-16 text-center">
-              <h2 className="text-4xl font-display font-bold">TECHNICAL ARSENAL</h2>
+                    <div className="flex items-center justify-between border-t border-white/5 pt-8">
+                       <span className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest font-bold">{article.date}</span>
+                       <span className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest font-bold italic">{article.readTime}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
            </div>
-           
-           <div className="relative w-full">
-             <div className="flex gap-8 whitespace-nowrap overflow-x-auto no-scrollbar pb-12 px-6 justify-start md:justify-center">
-               {PROFILE_DATA.skills.flatMap(s => s.items).map((skill, i) => (
-                 <motion.div 
-                   key={i}
-                   initial={{ opacity: 0, scale: 0.8 }}
-                   whileInView={{ opacity: 1, scale: 1 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: i * 0.05 }}
-                   className="inline-block px-8 py-12 bg-black/60 border border-white/5 min-w-[200px] text-center hover:border-accent hover:-translate-y-2 transition-all duration-300"
-                 >
-                   <div className="text-2xl font-bold font-display text-white mb-2">{skill}</div>
-                   <div className="text-xs text-gray-500 uppercase tracking-widest">Expertise</div>
-                 </motion.div>
-               ))}
-             </div>
+        </Slide>
+
+        {/* SLIDE 7: CONTACT */}
+        <Slide id="CONTACT" className="bg-[#020202]">
+           <div className="max-w-6xl mx-auto w-full text-center">
+              <h2 className="text-[11px] font-display tracking-[0.6em] text-neon-cyan uppercase mb-8">05 // UPLINK_PORTAL</h2>
+              <h3 className="text-7xl md:text-[10vw] font-display font-black text-white uppercase tracking-tighter italic mb-24 leading-none">INITIATE <span className="text-zinc-800">UPLINK</span></h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 pb-20">
+                 <div className="space-y-10 text-left">
+                    <a href={`mailto:${PROFILE_DATA.email}`} className="p-10 border border-white/5 bg-surface/40 flex items-center gap-10 group hover:border-neon-cyan/30 transition-all">
+                       <div className="p-4 border border-neon-cyan/20 rounded-sm group-hover:bg-neon-cyan/10 transition-all text-neon-cyan">
+                         <MailIcon size={40} />
+                       </div>
+                       <div>
+                         <div className="text-[9px] text-zinc-600 font-mono tracking-widest uppercase mb-1 font-bold">Protocol: Direct_Mail</div>
+                         <div className="text-2xl text-white font-display lowercase group-hover:text-neon-cyan transition-colors">{PROFILE_DATA.email}</div>
+                       </div>
+                    </a>
+                    <a href={`https://${PROFILE_DATA.linkedin}`} target="_blank" rel="noopener noreferrer" className="p-10 border border-white/5 bg-surface/40 flex items-center gap-10 group hover:border-neon-cyan/30 transition-all">
+                       <div className="p-4 border border-neon-cyan/20 rounded-sm group-hover:bg-neon-cyan/10 transition-all text-neon-cyan">
+                         <Linkedin size={40} />
+                       </div>
+                       <div>
+                         <div className="text-[9px] text-zinc-600 font-mono tracking-widest uppercase mb-1 font-bold">Protocol: Social_Link</div>
+                         <div className="text-2xl text-white font-display group-hover:text-neon-cyan transition-colors">sai-rahul123</div>
+                       </div>
+                    </a>
+                 </div>
+                 
+                 <div className="bg-surface/50 border border-white/10 p-12 md:p-16 text-left relative overflow-hidden group/form">
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-60" />
+                    <h4 className="font-mono text-neon-cyan text-[10px] tracking-[0.4em] uppercase mb-12 flex items-center gap-4 font-black"><Terminal size={18}/> Transmit_Signal_Packet</h4>
+                    <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+                       <input type="text" placeholder="NODE_ID" className="bg-transparent border-b border-white/10 outline-none font-mono text-base text-white w-full uppercase placeholder-zinc-800 tracking-widest py-3 focus:border-neon-cyan transition-colors" />
+                       <textarea placeholder="PAYLOAD_MESSAGE" className="bg-transparent border-b border-white/10 outline-none font-mono text-base text-white w-full h-32 resize-none uppercase placeholder-zinc-800 tracking-widest py-3 focus:border-neon-cyan transition-colors" />
+                       <button className="w-full py-8 bg-neon-cyan text-black font-display font-black text-[14px] uppercase tracking-[0.8em] hover:bg-white hover:scale-[1.02] active:scale-95 transition-all">Broadcast_Signal</button>
+                    </form>
+                 </div>
+              </div>
            </div>
-        </section>
+        </Slide>
 
-        {/* FOOTER */}
-        <footer className="py-20 border-t border-white/10 text-center relative z-10 bg-black/80">
-           <h2 className="text-6xl md:text-8xl font-black font-display text-white/5 mb-8 select-none">SAI RAHUL</h2>
-           <div className="flex justify-center gap-8 mb-8">
-             <a href="mailto:adepusairahul260920@gmail.com" className="text-gray-400 hover:text-white transition-colors">Email</a>
-             <a href="https://www.linkedin.com/in/sai-rahul123/" className="text-gray-400 hover:text-white transition-colors">LinkedIn</a>
-             <a href="https://github.com/ADEPUSAIRAHUL" className="text-gray-400 hover:text-white transition-colors">GitHub</a>
-           </div>
-           <p className="text-gray-600 text-sm font-display tracking-widest">
-             DESIGNED & ENGINEERED WITH REACT + MOTION
-           </p>
-        </footer>
-
-      </main>
-
-      {/* AI Assistant */}
+      </div>
       <ChatBot />
-      
+      <style>{`
+        .text-outline-purple {
+          -webkit-text-stroke: 1.5px #ff00ff;
+          color: transparent;
+          opacity: 0.5;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 };
